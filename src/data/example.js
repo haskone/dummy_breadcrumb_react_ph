@@ -1,41 +1,36 @@
-// Let's make the structure more
-// convenient to handle
-
-const root = {
-    name: "home",
+let root = {
     type: "dir",
-    children: [
-        {
-            name: "myname",
+    children: {
+        home: {
             type: "dir",
-            children: [
-                {
-                    name: "filea.txt",
-                    type: "file"
-                },
-                {
-                    name: "fileb.txt",
-                    type: "file"
-                },
-                {
-                    name: "projects",
+            children: {
+                myname: {
                     type: "dir",
-                    children: [
-                        {
-                            name: "mysupersecretproject",
+                    children: {
+                        "filea.txt": {
+                            type: "file",
+                        },
+                        "fileb.txt": {
+                            type: "file",
+                        },
+                        "projects": {
                             type: "dir",
-                            children: [
-                                {
-                                    name: "mysupersecretfile",
-                                    type: "file"
+                            children: {
+                                mysupersecretproject: {
+                                    type: "dir",
+                                    children: {
+                                        mysupersecretfile: {
+                                            type: "file",
+                                        },
+                                    },
                                 }
-                            ]
-                        }
-                    ]
-                }
-            ]
+                            },
+                        },
+                    }
+                },
+            },
         }
-    ]
-}
+    },
+};
 
 export default root;

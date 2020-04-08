@@ -6,17 +6,17 @@ import { faPlay } from '@fortawesome/free-solid-svg-icons';
 import './BreadItem.css';
 
 const BreadItem = (props) => {
-    const { name, onClick, isRoot } = props;
+    const { name, onItemClick, isRoot } = props;
     
     const handleClick = (e) => {
         e.preventDefault();
-        onClick();
+        onItemClick();
     };
 
     return (
-        <div className="BreadItem">
+        <div className='BreadItem'>
             { isRoot && <FontAwesomeIcon icon={ faPlay } /> }
-            <a href="#" onClick={ handleClick }>{ name }</a>
+            <a href='#' onClick={ handleClick }>{ name }</a>
         </div>
     );
 }

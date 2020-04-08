@@ -1,29 +1,51 @@
-import _ from 'lodash';
-
 import root from '../data/example';
 
-const filterFakeChildren = (children) => {
-    return children.map(i => _.pick(i, ['name', 'type']));
+const adjustChildren = (children, originalPath) => {
+    return Object.keys(children).map(name => {
+        return {
+            name: name,
+            type: children[name].type,
+            path: `${originalPath}/${name}`
+        }
+    });
 }
 
-const traverseFakeData = (name, node) => {
-    if (node.name === name) {
-        return {
-            ..._.pick(node, ['name', 'type']),
-            children: filterFakeChildren(node.children)
-        }
-    } else {
-        for (let subnode of node.children) {
-            if (subnode.type === 'dir') {
-                return traverseFakeData(name, subnode);
+const traverseData = (originalPath, path, nodes) => {
+    const nameToFind = path[0];
+    const restPath = path.slice(1);
+    const lookingForLeaft = restPath.length == 0;
+
+    for (let nodeName in nodes) {
+        if (nodeName === nameToFind) {
+            if (lookingForLeaft) {
+                let node = {
+                    name: nodeName,
+                    type: nodes[nodeName].type
+                }
+                if (nodes[nodeName].type == 'dir') {
+                    node.children = adjustChildren(
+                        nodes[nodeName].children,
+                        originalPath
+                    )
+                }
+                return node;
+            } else {
+                return traverseData(
+                    originalPath,
+                    restPath,
+                    nodes[nodeName].children
+                );
             }
         }
     }
 }
 
-// Let's say path === unique name of a node,
-// yeah, maybe path/to/node woulb be better
-// for this demo
 export const getContent = async (path) => {
-    return traverseFakeData(path, root);
+    const pathParts = path.split('/');
+    let result = traverseData(path, pathParts, { root: root });
+    if (!result) {
+        // If cannot find anything, let's move to home dir
+        return await getContent('root/home');
+    }
+    return result;
 }

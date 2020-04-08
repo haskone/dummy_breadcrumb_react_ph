@@ -8,10 +8,10 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import rootReducer from './reducers'
 
-
 const initState = {
-    crumbs: [{ name: 'home', type: 'dir'}],
-    content: []
+    crumbs: [{ name: 'home', type: 'dir', path: 'root/home'}],
+    content: [],
+    fileContent: ''
 };
 
 const store = createStore(rootReducer, initState);

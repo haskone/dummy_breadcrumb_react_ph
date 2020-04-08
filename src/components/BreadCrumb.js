@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,34 +6,12 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 import BreadItem from './BreadItem';
 
-import { setCurrentBread, setCurrentContent } from '../actions';
-
-import { getContent } from '../api/content';
-
 import './BreadCrumb.css';
 
 const BreadCrumb = (props) => {
-    const { crumbs, setCrumbs, setContent } = props;
-
-    useEffect(() => {
-        getContent(crumbs[0].name).then(crumb => {
-            if (Array.isArray(crumb.children)) {
-                setContent(crumb.children);
-            }
-        });
-    }, []);
-
-    const onCrumbClick = (item) => {
-        setCrumbs([item]);
-        getContent(item.name).then(crumb => {
-            if (Array.isArray(crumb.children)) {
-                setContent(crumb.children);
-            }
-        });
-    };
-
+    const { crumbs, onItemLoad } = props;
     return (
-        <div className="BreadCrumb">
+        <div className='BreadCrumb'>
             {
                 crumbs
                     .map((item, index) =>
@@ -41,12 +19,12 @@ const BreadCrumb = (props) => {
                             isRoot={index == 0}
                             name={item.name}
                             key={index}
-                            onClick={() => onCrumbClick(item)}
+                            onItemClick={() => onItemLoad(item)}
                         />
                     ).reduce((prev, curr) =>
                         [
                             prev,
-                            <FontAwesomeIcon icon={faArrowRight} />,
+                            <FontAwesomeIcon icon={faArrowRight}/>,
                             curr
                         ]
                     )
@@ -59,9 +37,4 @@ const mapStateToProps = state => ({
     crumbs: state.crumbs
 })
 
-const mapDispatchToProps = dispatch => ({
-    setCrumbs: crumbs => dispatch(setCurrentBread(crumbs)),
-    setContent: content => dispatch(setCurrentContent(content))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(BreadCrumb);
+export default connect(mapStateToProps)(BreadCrumb);
