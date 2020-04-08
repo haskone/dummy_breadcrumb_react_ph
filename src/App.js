@@ -20,7 +20,7 @@ const App = props => {
             setContent(crumb.children);
         } else if (crumb.type === 'file') {
             // TODO: move to some constants?
-            setFile('THIS IS FILE');
+            setFile(`THIS IS FILE: ${crumb.name}`);
             setContent([]);
         }
     }
